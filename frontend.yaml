@@ -2,36 +2,39 @@
   hosts: all
   become: yes
   tasks:
-    - name: Install nginx
-      ansible.builtin.dnf:
-        name:
-          - '@nginx1.26'
-          - nodejs
-        state: present
+    -name: Downloading node npm repository
+    ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
 
-    - name: Copying nginx configuration file
-      ansible.builtin.copy:
-        src: nginx.conf
-        dest: /etc/nginx/nginx.conf
+    -name: Install nginx & nodejs
+    ansible.builtin.dnf:
+      name:
+       - '@nginx1.26'
+       - nodejs
+      state: present
 
-    - name: Removing directory
-      ansible.builtin.file:
-        path: /usr/share/nginx/html
-        state: absent
+    -name: Copying nginx configuration file
+    ansible.builtin.copy:
+      src: nginx.conf
+      dest: /etc/nginx/nginx.conf
 
-    - name: Download and extract application
-      ansible.builtin.unarchive:
-        src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/frontend.tar.gz
-        dest: /usr/share/nginx
-        remote_src: yes
+    -name: Removing directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: absent
 
-    - name: Build frontend code
-      ansible.builtin.shell: npm ci ; npm run build ; mv dist html
-      args:
+    -name: Download and extract application
+    ansible.builtin.unarchive:
+      src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/frontend.tar.gz
+      dest: /usr/share/nginx
+      remote_src: yes
+
+    -name: Build frontend code
+    ansible.builtin.shell: npm ci ; npm run build ; mv dist html
+    args:
         chdir: /usr/share/nginx/ #the above shell command needs to be run in this directory
 
-    - name: Start nginx service
-      ansible.builtin.systemd_service:
-        name: nginx
-        enabled: true
-        state: restarted
+    -name: Start nginx service
+    ansible.builtin.systemd_service:
+      name: nginx
+      enabled: true
+      state: restarted
