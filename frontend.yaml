@@ -3,7 +3,7 @@
   become: yes
   tasks:
     - name: Downloading node npm repository
-      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+      ansible.builtin.shell: "curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -"
 
     - name: Install nginx & nodejs
       ansible.builtin.dnf:
