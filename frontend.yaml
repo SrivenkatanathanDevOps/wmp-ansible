@@ -1,10 +1,11 @@
 - name: Frontend setup
   hosts: all
+  become: yes
   tasks:
     - name: Install nginx
       ansible.builtin.dnf:
         name:
-          - "@nginx1.26"
+          - '@nginx1.26'
           - nodejs
         state: present
 
@@ -13,7 +14,7 @@
         src: nginx.conf
         dest: /etc/nginx/nginx.conf
 
-    - name: Recursively remove directory
+    - name: Removing directory
       ansible.builtin.file:
         path: /usr/share/nginx/html
         state: absent
