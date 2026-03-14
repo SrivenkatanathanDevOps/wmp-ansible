@@ -12,10 +12,10 @@
 
     - name: Install postgresql
       ansible.builtin.dnf:
+        state: present
         name:
           - "postgresql16-server"
           - "postgresql16"
-        state: present
 
     - name: Initialize postgresql database
       ansible.builtin.shell: /usr/pgsql-16/bin/postgresql-16-setup initdb
