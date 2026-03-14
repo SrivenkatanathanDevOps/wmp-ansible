@@ -1,0 +1,8 @@
+- name: Auth-service setup
+  hosts: all
+  become: yes
+  tasks:
+    -name: Install Golong
+    ansible.builtin.dnf:
+      name: golang
+      state: present
