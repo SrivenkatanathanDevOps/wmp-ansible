@@ -2,16 +2,11 @@
   hosts: all
   become: yes
   tasks:
-    - name: Import PostgreSQL GPG key
-      ansible.builtin.rpm_key:
-        state: present
-        key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
-
     - name: Install postgresql repository
       ansible.builtin.dnf:
         name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
         state: present
-        disable_gpg_check: no
+        disable_gpg_check: yes
 
     - name: Disable postgres default module
       ansible.builtin.shell: dnf -qy module disable postgresql
