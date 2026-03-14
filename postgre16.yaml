@@ -47,7 +47,7 @@
     - name: Updating schema.sql file
       ansible.builtin.copy:
         src: schema.sql
-        dest: /var/lib/pgsql/16/data/schema.sql
+        dest: /tmp/schema.sql
 
     - name: Load schema.sql file
       ansible.builtin.shell: sudo -u postgres /usr/pgsql-16/bin/psql < /tmp/schema.sql
