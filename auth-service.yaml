@@ -8,7 +8,7 @@
         state: present
 
     - name: Adding user
-      ansible.builtin.shell: useradd -r -s /bin/false appuser
+      ansible.builtin.shell: useradd -r -s /bin/false appuser ; mkdir -p /app
 
     - name: Downloading and extracting the artifacts
       ansible.builtin.unarchive:
