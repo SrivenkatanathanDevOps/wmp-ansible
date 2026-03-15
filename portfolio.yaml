@@ -4,7 +4,7 @@
   tasks:
     - name: Install Java 21
       ansible.builtin.dnf:
-        name: "@java:21"
+        name: "@java-21-openjdk-devel"
         state: present
 
     - name: Adding appuser & creating directory
