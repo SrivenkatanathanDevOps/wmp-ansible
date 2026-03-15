@@ -2,7 +2,38 @@
   hosts: all
   become: yes
   tasks:
-    -name: Install Golong
-    ansible.builtin.dnf:
-      name: golang
-      state: present
+    - name: Install Golong
+      ansible.builtin.dnf:
+        name: golang
+        state: present
+
+    - name: Adding user
+      ansible.builtin.shell: useradd -r -s /bin/false appuser
+
+    - name: Downloading and extracting the artifacts
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/auth-service.tar.gz
+        dest: /app
+        remote_src: yes
+
+    - name: Updating auth-service.service file
+      ansible.builtin.copy:
+        src: auth-service.service
+        dest: /etc/systemd/system/auth-service.service
+
+    - name: Build go
+      ansible.builtin.shell: CGO_ENABLED=0 go build -o auth-service ./cmd/server
+      args:
+        chdir: /app #the above shell command needs to be run in this directory
+
+    - name: change owner and modification.
+      ansible.builtin.shell: chown -R appuser:appuser /app ; chmod o-rwx /app -R
+
+    - name: Daemon reload
+      ansible.builtin.shell: systemctl daemon-reload
+
+    - name: Start auth service
+      ansible.builtin.systemd_service:
+        name: auth-service
+        enabled: true
+        state: restarted
